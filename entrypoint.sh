@@ -33,5 +33,8 @@ old_ifs=$IFS
 set -- $args
 IFS=$old_ifs
 
+echo Attemping to enable MSR mod...
+./randomx_boost.sh || true
+
 echo "xmrig" "$@"
 exec "xmrig" "$@"

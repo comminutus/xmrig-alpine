@@ -11,8 +11,6 @@ ARG repo=https://github.com/xmrig/xmrig.git
 ARG arg_additional=
 ARG build_dir=/tmp/build
 ARG install_dir=/usr/local/bin
-ARG uid=10000
-ARG user=$container_name
 
 FROM alpine:${alpine_tag} as base
 
@@ -27,7 +25,7 @@ WORKDIR $build_dir
 
 # Update base Alpine system and add build packages
 RUN apk update
-ARG build_packages='cmake g++ git hwloc-dev libuv-dev make openssl-dev'
+ARG build_packages='autoconf automake cmake g++ git hwloc-dev libtool libuv-dev make openssl-dev'
 RUN apk add $build_packages
 
 # Download source
@@ -48,14 +46,20 @@ RUN sed -i 's/DonateLevel.*$/DonateLevel = 0;/g'                src/donate.h    
 RUN cmake .
 RUN make -j$(nproc)
 
+# Build MSR mod
+WORKDIR $build_dir
+RUN git clone https://github.com/intel/msr-tools.git
+WORKDIR $build_dir/msr-tools
+RUN ./autogen.sh
+RUN make
 
 ########################################################################################################################
 # Final Image
 ########################################################################################################################
 FROM base as final
-ARG arg_additional build_dir install_dir uid user
+ARG arg_additional build_dir install_dir
 
-WORKDIR /home/$user
+WORKDIR /root
 
 # Upgrade pre-installed Alpine packages and install runtime dependencies
 RUN apk --no-cache upgrade
@@ -63,8 +67,10 @@ ARG runtime_packages='hwloc libuv'
 RUN apk add --no-cache $runtime_packages
 
 # Install binaries
-COPY --from=build $build_dir/source/xmrig            $install_dir
-COPY --from=build $build_dir/source/src/config.json  /home/$user/.config/xmrig.json
+COPY --from=build $build_dir/source/xmrig                       $install_dir
+COPY --from=build $build_dir/source/scripts/randomx_boost.sh    /root
+COPY --from=build $build_dir/source/src/config.json             /root/.config/xmrig.json
+COPY --from=build $build_dir/msr-tools/wrmsr                    /usr/local/bin
 
 # Environment variables, overridable from container
 ENV XMRIG_ADDITIONAL_ARGS=$arg_additional
@@ -74,17 +80,8 @@ ENV XMRIG_CPU_PRIORITY=
 ENV XMRIG_URL=
 ENV XMRIG_THREADS=
 
-# Create user
-RUN addgroup -g $uid -S $user && adduser -u $uid -S -D -G $user $user
-
 # Copy container entrypoint script into container
 COPY entrypoint.sh .
-
-# Change ownership of all files in user dir and data dir
-RUN chown -R $user:$user /home/$user
-
-# Run as user
-USER $user
 
 # Run entrypoint script
 ENTRYPOINT ["./entrypoint.sh"]
