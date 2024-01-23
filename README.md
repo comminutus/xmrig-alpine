@@ -34,8 +34,11 @@ If there are other options you'd like to set that don't correspond to an environ
 Not all options are available through command line arguments, so you may want to provide a [configuration file](https://xmrig.com/docs/miner/command-line-options) by setting the `XMRIG_CONFIG` environment variable.
 
 ### User/Group
-The container uses a user named _xmrig_ with a UID of _10000_, with a group that matches the same.
-If you'd like to change this, rebuild the container and set the `uid` build argument.
+The container runs as `root` in order to take advantage of any hardware performance enhancements, such as utilizing the MSR mod. Note this requires the host user also be `root`.
+
+## Common Issues
+- `FAILED TO APPLY MSR MOD, HASHRATE WILL BE LOW`
+    In order to take advantage of the MSR MOD, you must use a _rootful_ (i.e. `root` user) _privileged_ container (`sudo podman run --privileged`, etc.)
 
 ## License
 This project inherits xmrig's GPL-3.0 license - see the [LICENSE](LICENSE) file for details.
