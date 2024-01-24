@@ -20,8 +20,12 @@ if [ -n "$XMRIG_CPU_PRIORITY" ]; then
     args="$args --cpu-priority=$XMRIG_CPU_PRIORITY"
 fi
 
+if [ -n "$XMRIG_PROXY" ]; then
+    args="$args --proxy=$XMRIG_PROXY"
+fi
+
 if [ -n "$XMRIG_URL" ]; then
-    args="$args --url=$URL"
+    args="$args --url=$XMRIG_URL"
 fi
 
 if [ -n "$XMRIG_THREADS" ]; then

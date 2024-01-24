@@ -26,6 +26,7 @@ options that `xmrig` supports.  For help regarding a specific option, consult `x
 | `XMRIG_CONFIG`        | `--config`        |
 | `XMRIG_CPU_AFFINITY`  | `--cpu-affinity`  |
 | `XMRIG_CPU_PRIORITY`  | `--cpu-priority`  |
+| `XMRIG_PROXY`         | `--proxy`         |
 | `XMRIG_URL`           | `--url`           |
 | `XMRIG_THREADS`       | `--threads`       |
 
