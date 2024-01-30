@@ -1,5 +1,5 @@
 # xmrig-alpine
-[![License](https://img.shields.io/badge/License-GPL%203.0-blue.svg)](https://opensource.org/licenses/GPL-3.0)
+[![AGPL License](https://img.shields.io/badge/license-AGPL-blue.svg)](https://www.gnu.org/licenses/agpl-3.0.html)
 [![CI](https://github.com/comminutus/xmrig-alpine/actions/workflows/ci.yaml/badge.svg)](https://github.com/comminutus/xmrig-alpine/actions/workflows/ci.yaml)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/comminutus/xmrig-alpine)](https://github.com/comminutus/xmrig-alpine/releases/latest)
 
@@ -41,5 +41,16 @@ The container runs as `root` in order to take advantage of any hardware performa
 - `FAILED TO APPLY MSR MOD, HASHRATE WILL BE LOW`
     In order to take advantage of the MSR MOD, you must use a _rootful_ (i.e. `root` user) _privileged_ container (`sudo podman run --privileged`, etc.)
 
+## Dependencies
+| Name                                         | Version   |
+| -------------------------------------------- | --------- |
+| [Alpine Linux](https://www.alpinelinux.org/) | v3.19.1   |
+| [xmrig](https://github.com/xmrig/xmrig)      | v6.21.10  |
+
+
 ## License
-This project inherits xmrig's GPL-3.0 license - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the GNU Affero General Public License v3.0 - see the [LICENSE](LICENSE) file for details.
+
+This container image includes a compiled [xmrig](https://github.com/xmrig/xmrig) binary, which is distributed under
+the terms of the GNU General Public License version 3 (GPLv3). The corresponding source code can be obtained
+[here](https://github.com/xmrig/xmrig).

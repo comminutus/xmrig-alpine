@@ -2,7 +2,7 @@
 # Base Image
 ########################################################################################################################
 # Core Config
-ARG alpine_tag=3.19.0
+ARG alpine_tag=3.19.1
 ARG repo_tag=v6.21.0
 ARG container_name=xmrig
 ARG repo=https://github.com/xmrig/xmrig.git
@@ -10,6 +10,7 @@ ARG repo=https://github.com/xmrig/xmrig.git
 # Defaults
 ARG arg_additional=
 ARG build_dir=/tmp/build
+ARG license=$build_dir/source/LICENSE
 ARG install_dir=/usr/local/bin
 
 FROM alpine:${alpine_tag} as base
@@ -68,6 +69,7 @@ RUN apk add --no-cache $runtime_packages
 
 # Install binaries
 COPY --from=build $build_dir/source/xmrig                       $install_dir
+COPY --from=build $license                                      /usr/share/licenses/xmrig/
 COPY --from=build $build_dir/source/scripts/randomx_boost.sh    /root
 COPY --from=build $build_dir/source/src/config.json             /root/.config/xmrig.json
 COPY --from=build $build_dir/msr-tools/wrmsr                    /usr/local/bin
